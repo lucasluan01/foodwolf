@@ -17,10 +17,10 @@ abstract class _LoginStoreBase with Store {
   bool isShowPassword = false;
 
   @action
-  void setEmail(String value) => email = value;
+  void setEmail(String value) => email = value.trim();
 
   @action
-  void setPassword(String value) => password = value;
+  void setPassword(String value) => password = value.trim();
 
   @action
   void setShowPassword() => isShowPassword = !isShowPassword;

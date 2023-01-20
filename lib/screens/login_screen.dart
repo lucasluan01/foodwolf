@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -12,7 +13,7 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final loginStore = LoginStore();
+  final _loginStore = LoginStore();
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +31,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   labelText: "E-mail",
                   border: const OutlineInputBorder(),
-                  errorText: loginStore.emailError,
-                  suffixIcon: loginStore.emailError != null
+                  errorText: _loginStore.emailError,
+                  suffixIcon: _loginStore.emailError != null
                       ? const Icon(
                           Icons.error,
                           color: Colors.red,
@@ -39,7 +40,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       : null,
                 ),
                 keyboardType: TextInputType.emailAddress,
-                onChanged: loginStore.setEmail,
+                onChanged: _loginStore.setEmail,
               );
             }),
             const SizedBox(height: 16),
@@ -48,22 +49,22 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   labelText: "Senha",
                   border: const OutlineInputBorder(),
-                  suffixIcon: loginStore.passwordError != null
+                  suffixIcon: _loginStore.passwordError != null
                       ? const Icon(
                           Icons.error,
                           color: Colors.red,
                         )
                       : IconButton(
-                          onPressed: loginStore.setShowPassword,
+                          onPressed: _loginStore.setShowPassword,
                           icon: Icon(
-                            loginStore.isShowPassword ? Icons.visibility : Icons.visibility_off,
+                            _loginStore.isShowPassword ? Icons.visibility_off : Icons.visibility,
                             color: const Color(0xffACACAC),
                           ),
                         ),
-                  errorText: loginStore.passwordError,
+                  errorText: _loginStore.passwordError,
                 ),
-                obscureText: loginStore.isShowPassword,
-                onChanged: loginStore.setPassword,
+                obscureText: !_loginStore.isShowPassword,
+                onChanged: _loginStore.setPassword,
               );
             }),
             const SizedBox(height: 12),
@@ -136,24 +137,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     fontSize: 16,
                   ),
                   children: [
-                    WidgetSpan(
-                      child: GestureDetector(
-                        onTap: () => Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => const RegisterScreen(),
-                          ),
-                        ),
-                        child: const Text(
-                          'Registre-se',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            decoration: TextDecoration.underline,
-                            color: Color(0xff881E09),
-                            fontSize: 16,
-                          ),
-                        ),
+                    TextSpan(
+                      text: 'Registre-se',
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        decoration: TextDecoration.underline,
+                        color: Color(0xff881E09),
+                        fontSize: 16,
                       ),
+                      recognizer: TapGestureRecognizer()
+                        ..onTap = () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => const RegisterScreen(),
+                            ),
+                          );
+                        },
                     ),
                   ],
                 ),

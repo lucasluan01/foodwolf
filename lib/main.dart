@@ -11,11 +11,12 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      title: 'Food Wolf',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSwatch().copyWith(
           primary: const Color(0xff881E09),
-          secondary: const Color(0xFFFFC107),
+          secondary: const Color(0xffACACAC),
         ),
         inputDecorationTheme: const InputDecorationTheme(
           enabledBorder: OutlineInputBorder(
