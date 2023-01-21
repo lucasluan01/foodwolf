@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:foodwolf/components/appbar_custom.dart';
 import 'package:foodwolf/stores/redefine_password_store.dart';
 
 class RedefinePasswordScreen extends StatefulWidget {
@@ -16,7 +15,7 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarCustom(title: "Redefinir senha"),
+      appBar: AppBar(title: const Text("Redefinir senha")),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -24,10 +23,6 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
             const Text(
               "Informe um e-mail para redefinir sua senha",
               textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Color(0xff334155),
-                fontSize: 16,
-              ),
             ),
             const SizedBox(height: 24),
             Observer(builder: (_) {
@@ -36,7 +31,12 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
                   labelText: "E-mail",
                   border: const OutlineInputBorder(),
                   errorText: redefineStore.emailError,
-                  suffixIcon: redefineStore.emailError != null ? const Icon(Icons.error, color: Colors.red) : null,
+                  suffixIcon: redefineStore.emailError != null
+                      ? Icon(
+                          Icons.error,
+                          color: Theme.of(context).errorColor,
+                        )
+                      : null,
                 ),
                 onChanged: redefineStore.setEmail,
               );

@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:foodwolf/components/appbar_custom.dart';
+import 'package:foodwolf/config/theme/app_colors.dart';
 
 import '../stores/register_store.dart';
 
@@ -18,7 +18,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const AppBarCustom(title: "Criar conta"),
+      appBar: AppBar(title: const Text("Criar conta")),
       body: SafeArea(
         child: ListView(
           padding: const EdgeInsets.all(20),
@@ -33,9 +33,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       errorText: registerStore.nameError,
                       suffixIcon: registerStore.nameError != null
-                          ? const Icon(
+                          ? Icon(
                               Icons.error,
-                              color: Colors.red,
+                              color: Theme.of(context).errorColor,
                             )
                           : null,
                     ),
@@ -50,9 +50,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       hintText: "000.000.000-00",
                       errorText: registerStore.documentError,
                       suffixIcon: registerStore.documentError != null
-                          ? const Icon(
+                          ? Icon(
                               Icons.error,
-                              color: Colors.red,
+                              color: Theme.of(context).errorColor,
                             )
                           : null,
                     ),
@@ -68,9 +68,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       errorText: registerStore.phoneError,
                       suffixIcon: registerStore.phoneError != null
-                          ? const Icon(
+                          ? Icon(
                               Icons.error,
-                              color: Colors.red,
+                              color: Theme.of(context).errorColor,
                             )
                           : null,
                     ),
@@ -86,9 +86,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       errorText: registerStore.emailError,
                       suffixIcon: registerStore.emailError != null
-                          ? const Icon(
+                          ? Icon(
                               Icons.error,
-                              color: Colors.red,
+                              color: Theme.of(context).errorColor,
                             )
                           : null,
                     ),
@@ -102,15 +102,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       errorText: registerStore.passwordError,
                       suffixIcon: registerStore.passwordError != null
-                          ? const Icon(
+                          ? Icon(
                               Icons.error,
-                              color: Colors.red,
+                              color: Theme.of(context).errorColor,
                             )
                           : IconButton(
                               onPressed: registerStore.setIsShowPassword,
                               icon: Icon(
                                 registerStore.isShowPassword ? Icons.visibility_off : Icons.visibility,
-                                color: const Color(0xffACACAC),
+                                color: AppColors.neutral_1,
                               ),
                             ),
                     ),
@@ -125,9 +125,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       border: const OutlineInputBorder(),
                       errorText: registerStore.confirmPasswordError,
                       suffixIcon: registerStore.confirmPasswordError != null
-                          ? const Icon(
+                          ? Icon(
                               Icons.error,
-                              color: Colors.red,
+                              color: Theme.of(context).errorColor,
                             )
                           : null,
                     ),
@@ -137,24 +137,19 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }),
                 Observer(builder: (_) {
                   return CheckboxListTile(
-                    activeColor: const Color(0xff881E09),
+                    activeColor: Theme.of(context).colorScheme.primary,
                     contentPadding: const EdgeInsets.all(0),
                     dense: true,
-                    title: RichText(
-                      text: TextSpan(
+                    title: Text.rich(
+                      TextSpan(
                         text: "Eu concordo com os ",
-                        style: const TextStyle(
-                          color: Color(0xff334155),
-                          fontSize: 15,
-                        ),
                         children: [
                           TextSpan(
                             text: 'Termos & Condições',
-                            style: const TextStyle(
-                              color: Color(0xff881E09),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
-                              fontSize: 15,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
@@ -164,11 +159,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           const TextSpan(text: " e com a "),
                           TextSpan(
                             text: "Política de Privacidade",
-                            style: const TextStyle(
-                              color: Color(0xff881E09),
+                            style: TextStyle(
+                              color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
                               decoration: TextDecoration.underline,
-                              fontSize: 15,
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {

@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foodwolf/config/theme/app_colors.dart';
+import 'package:foodwolf/config/theme/color_schemes.g.dart';
 import 'package:foodwolf/screens/login_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,18 +17,26 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Food Wolf',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch().copyWith(
-          primary: const Color(0xff881E09),
-          secondary: const Color(0xffACACAC),
+        textTheme: GoogleFonts.poppinsTextTheme(
+          Theme.of(context).textTheme.apply(
+                bodyColor: AppColors.bodyText,
+              ),
         ),
+        appBarTheme: AppBarTheme(
+          foregroundColor: Colors.black,
+          centerTitle: true,
+          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+          elevation: 0,
+        ),
+        colorScheme: lightColorScheme,
         inputDecorationTheme: const InputDecorationTheme(
+          fillColor: AppColors.neutral_0,
           enabledBorder: OutlineInputBorder(
             borderSide: BorderSide(
               width: 1,
-              color: Color(0xffACACAC),
+              color: AppColors.neutral_1,
             ),
           ),
-          focusColor: Colors.amber,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
@@ -44,7 +55,7 @@ class MyApp extends StatelessWidget {
             ),
             side: const BorderSide(
               width: 1,
-              color: Color(0xffACACAC),
+              color: AppColors.neutral_1,
             ),
           ),
         ),

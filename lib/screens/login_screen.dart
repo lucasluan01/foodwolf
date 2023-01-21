@@ -2,6 +2,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:foodwolf/config/theme/app_colors.dart';
+import 'package:foodwolf/screens/redefine_password_screen.dart';
 import 'package:foodwolf/screens/register_screen.dart';
 import 'package:foodwolf/stores/login_store.dart';
 
@@ -33,9 +35,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   border: const OutlineInputBorder(),
                   errorText: _loginStore.emailError,
                   suffixIcon: _loginStore.emailError != null
-                      ? const Icon(
+                      ? Icon(
                           Icons.error,
-                          color: Colors.red,
+                          color: Theme.of(context).errorColor,
                         )
                       : null,
                 ),
@@ -50,15 +52,15 @@ class _LoginScreenState extends State<LoginScreen> {
                   labelText: "Senha",
                   border: const OutlineInputBorder(),
                   suffixIcon: _loginStore.passwordError != null
-                      ? const Icon(
+                      ? Icon(
                           Icons.error,
-                          color: Colors.red,
+                          color: Theme.of(context).errorColor,
                         )
                       : IconButton(
                           onPressed: _loginStore.setShowPassword,
                           icon: Icon(
                             _loginStore.isShowPassword ? Icons.visibility_off : Icons.visibility,
-                            color: const Color(0xffACACAC),
+                            color: AppColors.neutral_1,
                           ),
                         ),
                   errorText: _loginStore.passwordError,
@@ -69,13 +71,21 @@ class _LoginScreenState extends State<LoginScreen> {
             }),
             const SizedBox(height: 12),
             GestureDetector(
-              onTap: () {},
-              child: const Text(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const RedefinePasswordScreen(),
+                  ),
+                );
+              },
+              child: Text(
                 "Esqueci minha senha",
                 style: TextStyle(
                   decoration: TextDecoration.underline,
-                  color: Color(0xff881E09),
-                  fontSize: 14,
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 13,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
@@ -89,22 +99,18 @@ class _LoginScreenState extends State<LoginScreen> {
               children: const <Widget>[
                 Expanded(
                   child: Divider(
-                    color: Color(0xffACACAC),
-                    thickness: 0.75,
+                    color: AppColors.neutral_1,
                   ),
                 ),
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.0),
                   child: Text(
                     "OU",
-                    style: TextStyle(
-                      color: Color(0xff334155),
-                    ),
                   ),
                 ),
                 Expanded(
                   child: Divider(
-                    color: Color(0xffACACAC),
+                    color: AppColors.neutral_1,
                     thickness: 0.75,
                   ),
                 ),
@@ -129,21 +135,16 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 36),
             Center(
-              child: RichText(
-                text: TextSpan(
+              child: Text.rich(
+                TextSpan(
                   text: 'Não tem uma conta? ',
-                  style: const TextStyle(
-                    color: Color(0xff334155),
-                    fontSize: 16,
-                  ),
                   children: [
                     TextSpan(
                       text: 'Registre-se',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         decoration: TextDecoration.underline,
-                        color: Color(0xff881E09),
-                        fontSize: 16,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                       recognizer: TapGestureRecognizer()
                         ..onTap = () {
