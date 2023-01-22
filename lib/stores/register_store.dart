@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:foodwolf/auth/auth_service.dart';
+import 'package:foodwolf/models/user_model.dart';
+import 'package:foodwolf/repositories/user_repository.dart';
 import 'package:foodwolf/utils/extensions.dart';
 import 'package:mobx/mobx.dart';
 
@@ -189,13 +192,17 @@ abstract class _RegisterStoreBase with Store {
     isLoading = true;
 
     try {
-      await AuthService.createUserWithEmailAndPassword(email: email, password: password);
+      UserCredential? userCredential =
+          await AuthService.createUserWithEmailAndPassword(email: email, password: password);
+      var newUser = UserModel(id: userCredential!.user!.uid, name: name, document: document, phone: phone);
+      await UserRepository.addUser(user: newUser);
     } catch (e) {
       errorMessage = e.toString();
     }
     isLoading = false;
   }
 
+  @action
   loginPressed() {
     checkTermsAndPolicyError();
 
