@@ -1,4 +1,4 @@
-package com.example.foodwolf
+package com.lucas.food_wolf
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,5 +1,3 @@
-// https://m3.material.io/theme-builder#/custom
-
 import 'package:flutter/material.dart';
 
 const lightColorScheme = ColorScheme(

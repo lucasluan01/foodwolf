@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "860670522361",
+    "project_id": "food-wolf",
+    "storage_bucket": "food-wolf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:860670522361:android:c773c4663db1c15bb78328",
+        "android_client_info": {
+          "package_name": "com.lucas.food_wolf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "860670522361-d7j8i82aqhvscbfnvss1a4mj4qvpgaem.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2Alwrlvo0TwLSdXTObmpRaGthozjRnZs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "860670522361-d7j8i82aqhvscbfnvss1a4mj4qvpgaem.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

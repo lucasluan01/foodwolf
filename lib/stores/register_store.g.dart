@@ -105,13 +105,13 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
       Atom(name: '_RegisterStoreBase.name', context: context);
 
   @override
-  String? get name {
+  String get name {
     _$nameAtom.reportRead();
     return super.name;
   }
 
   @override
-  set name(String? value) {
+  set name(String value) {
     _$nameAtom.reportWrite(value, super.name, () {
       super.name = value;
     });
@@ -121,13 +121,13 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
       Atom(name: '_RegisterStoreBase.phone', context: context);
 
   @override
-  String? get phone {
+  String get phone {
     _$phoneAtom.reportRead();
     return super.phone;
   }
 
   @override
-  set phone(String? value) {
+  set phone(String value) {
     _$phoneAtom.reportWrite(value, super.phone, () {
       super.phone = value;
     });
@@ -153,13 +153,13 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
       Atom(name: '_RegisterStoreBase.email', context: context);
 
   @override
-  String? get email {
+  String get email {
     _$emailAtom.reportRead();
     return super.email;
   }
 
   @override
-  set email(String? value) {
+  set email(String value) {
     _$emailAtom.reportWrite(value, super.email, () {
       super.email = value;
     });
@@ -169,13 +169,13 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
       Atom(name: '_RegisterStoreBase.password', context: context);
 
   @override
-  String? get password {
+  String get password {
     _$passwordAtom.reportRead();
     return super.password;
   }
 
   @override
-  set password(String? value) {
+  set password(String value) {
     _$passwordAtom.reportWrite(value, super.password, () {
       super.password = value;
     });
@@ -185,13 +185,13 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
       Atom(name: '_RegisterStoreBase.confirmPassword', context: context);
 
   @override
-  String? get confirmPassword {
+  String get confirmPassword {
     _$confirmPasswordAtom.reportRead();
     return super.confirmPassword;
   }
 
   @override
-  set confirmPassword(String? value) {
+  set confirmPassword(String value) {
     _$confirmPasswordAtom.reportWrite(value, super.confirmPassword, () {
       super.confirmPassword = value;
     });
@@ -227,6 +227,62 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
     _$checkTermsAndPolicyAtom.reportWrite(value, super.checkTermsAndPolicy, () {
       super.checkTermsAndPolicy = value;
     });
+  }
+
+  late final _$isLoadingAtom =
+      Atom(name: '_RegisterStoreBase.isLoading', context: context);
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
+  late final _$errorMessageAtom =
+      Atom(name: '_RegisterStoreBase.errorMessage', context: context);
+
+  @override
+  String? get errorMessage {
+    _$errorMessageAtom.reportRead();
+    return super.errorMessage;
+  }
+
+  @override
+  set errorMessage(String? value) {
+    _$errorMessageAtom.reportWrite(value, super.errorMessage, () {
+      super.errorMessage = value;
+    });
+  }
+
+  late final _$showErrorsAtom =
+      Atom(name: '_RegisterStoreBase.showErrors', context: context);
+
+  @override
+  bool get showErrors {
+    _$showErrorsAtom.reportRead();
+    return super.showErrors;
+  }
+
+  @override
+  set showErrors(bool value) {
+    _$showErrorsAtom.reportWrite(value, super.showErrors, () {
+      super.showErrors = value;
+    });
+  }
+
+  late final _$_createUserAsyncAction =
+      AsyncAction('_RegisterStoreBase._createUser', context: context);
+
+  @override
+  Future<void> _createUser() {
+    return _$_createUserAsyncAction.run(() => super._createUser());
   }
 
   late final _$_RegisterStoreBaseActionController =
@@ -321,6 +377,17 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
   }
 
   @override
+  dynamic checkTermsAndPolicyError() {
+    final _$actionInfo = _$_RegisterStoreBaseActionController.startAction(
+        name: '_RegisterStoreBase.checkTermsAndPolicyError');
+    try {
+      return super.checkTermsAndPolicyError();
+    } finally {
+      _$_RegisterStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 name: ${name},
@@ -331,6 +398,9 @@ password: ${password},
 confirmPassword: ${confirmPassword},
 isShowPassword: ${isShowPassword},
 checkTermsAndPolicy: ${checkTermsAndPolicy},
+isLoading: ${isLoading},
+errorMessage: ${errorMessage},
+showErrors: ${showErrors},
 nameValid: ${nameValid},
 phoneValid: ${phoneValid},
 documentValid: ${documentValid},

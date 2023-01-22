@@ -1,3 +1,4 @@
+import 'package:foodwolf/auth/auth_service.dart';
 import 'package:foodwolf/utils/extensions.dart';
 import 'package:mobx/mobx.dart';
 
@@ -7,28 +8,37 @@ class RegisterStore = _RegisterStoreBase with _$RegisterStore;
 
 abstract class _RegisterStoreBase with Store {
   @observable
-  String? name;
+  String name = "";
 
   @observable
-  String? phone;
+  String phone = "";
 
   @observable
   String? document;
 
   @observable
-  String? email;
+  String email = "";
 
   @observable
-  String? password;
+  String password = "";
 
   @observable
-  String? confirmPassword;
+  String confirmPassword = "";
 
   @observable
   bool isShowPassword = false;
 
   @observable
   bool checkTermsAndPolicy = false;
+
+  @observable
+  bool isLoading = false;
+
+  @observable
+  String? errorMessage;
+
+  @observable
+  bool showErrors = false;
 
   @action
   void setName(String value) => name = value.trim();
@@ -55,34 +65,32 @@ abstract class _RegisterStoreBase with Store {
   void setCheckTermsAndPolicy(bool? value) => checkTermsAndPolicy = value ?? false;
 
   @computed
-  bool get nameValid => name != null && nameError == null;
+  bool get nameValid => name.length >= 3;
 
   @computed
-  bool get phoneValid => phone != null && phoneError == null;
+  bool get phoneValid => phone.length == 11;
 
   @computed
-  bool get documentValid => documentError == null;
+  bool get documentValid => documentError == null || document!.length != 11;
 
   @computed
-  bool get emailValid => email != null && emailError == null;
+  bool get emailValid => email.isEmailValid();
 
   @computed
-  bool get passwordValid => password != null && passwordError == null;
+  bool get passwordValid => password.length >= 8;
 
   @computed
-  bool get confirmPasswordValid => confirmPassword != null && confirmPasswordError == null;
+  bool get confirmPasswordValid => confirmPassword.length >= 8 && confirmPassword == password;
 
   @computed
   String? get nameError {
-    if (name == null) {
+    if (!showErrors || nameValid) {
       return null;
     }
-
-    if (name!.isEmpty) {
+    if (name.isEmpty) {
       return "Campo obrigatório";
     }
-
-    if (name!.length < 3) {
+    if (name.length < 3) {
       return "O nome deve conter pelo menos 3 caracteres";
     }
     return null;
@@ -90,10 +98,9 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   String? get documentError {
-    if (document == null || document!.isEmpty) {
+    if (!showErrors || document == null || document!.isEmpty) {
       return null;
     }
-
     if (document!.length != 11) {
       return "CPF inválido";
     }
@@ -102,15 +109,13 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   String? get phoneError {
-    if (phone == null) {
+    if (!showErrors || phoneValid) {
       return null;
     }
-
-    if (phone!.isEmpty) {
+    if (phone.isEmpty) {
       return "Campo obrigatório";
     }
-
-    if (phone!.length != 11) {
+    if (phone.length != 11) {
       return "Telefone inválido";
     }
     return null;
@@ -118,15 +123,13 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   String? get emailError {
-    if (email == null) {
+    if (!showErrors || emailValid) {
       return null;
     }
-
-    if (email!.isEmpty) {
+    if (email.isEmpty) {
       return "Campo obrigatório";
     }
-
-    if (!email!.isEmailValid()) {
+    if (!email.isEmailValid()) {
       return "E-mail inválido";
     }
     return null;
@@ -134,15 +137,13 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   String? get passwordError {
-    if (password == null) {
+    if (!showErrors || passwordValid) {
       return null;
     }
-
-    if (password!.isEmpty) {
+    if (password.isEmpty) {
       return "Campo obrigatório";
     }
-
-    if (password!.length < 8) {
+    if (password.length < 8) {
       return "A senha deve conter pelo menos 8 caracteres";
     }
     return null;
@@ -150,16 +151,25 @@ abstract class _RegisterStoreBase with Store {
 
   @computed
   String? get confirmPasswordError {
-    if (confirmPassword == null) {
+    if (!showErrors || confirmPasswordValid) {
       return null;
     }
-
-    if (confirmPassword!.isEmpty) {
+    if (confirmPassword.isEmpty) {
       return "Campo obrigatório";
     }
-
     if (confirmPassword != password) {
       return "As senhas não coincidem";
+    }
+    return null;
+  }
+
+  @action
+  checkTermsAndPolicyError() {
+    if (!showErrors) {
+      return null;
+    }
+    if (!checkTermsAndPolicy) {
+      errorMessage = "Você precisa aceitar os Termos e a Política de Privacidade";
     }
     return null;
   }
@@ -173,4 +183,26 @@ abstract class _RegisterStoreBase with Store {
       passwordValid &&
       confirmPasswordValid &&
       checkTermsAndPolicy;
+
+  @action
+  Future<void> _createUser() async {
+    isLoading = true;
+
+    try {
+      await AuthService.createUserWithEmailAndPassword(email: email, password: password);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    isLoading = false;
+  }
+
+  loginPressed() {
+    checkTermsAndPolicyError();
+
+    if (isFormValid) {
+      _createUser();
+      return;
+    }
+    showErrors = true;
+  }
 }

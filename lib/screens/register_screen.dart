@@ -28,7 +28,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Observer(builder: (_) {
                   return TextFormField(
+                    enabled: !registerStore.isLoading,
                     decoration: InputDecoration(
+                      filled: registerStore.isLoading,
                       labelText: "Nome",
                       border: const OutlineInputBorder(),
                       errorText: registerStore.nameError,
@@ -44,7 +46,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
+                    enabled: !registerStore.isLoading,
                     decoration: InputDecoration(
+                      filled: registerStore.isLoading,
                       border: const OutlineInputBorder(),
                       labelText: "CPF (opcional)",
                       hintText: "000.000.000-00",
@@ -62,7 +66,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
+                    enabled: !registerStore.isLoading,
                     decoration: InputDecoration(
+                      filled: registerStore.isLoading,
                       labelText: "Celular",
                       hintText: "(31) 9 0000-0000",
                       border: const OutlineInputBorder(),
@@ -80,7 +86,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
+                    enabled: !registerStore.isLoading,
                     decoration: InputDecoration(
+                      filled: registerStore.isLoading,
                       labelText: "E-mail",
                       hintText: "nome@exemplo.com",
                       border: const OutlineInputBorder(),
@@ -97,7 +105,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
+                    enabled: !registerStore.isLoading,
                     decoration: InputDecoration(
+                      filled: registerStore.isLoading,
                       labelText: "Senha",
                       border: const OutlineInputBorder(),
                       errorText: registerStore.passwordError,
@@ -120,7 +130,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
+                    enabled: !registerStore.isLoading,
                     decoration: InputDecoration(
+                      filled: registerStore.isLoading,
                       labelText: "Confirmar senha",
                       border: const OutlineInputBorder(),
                       errorText: registerStore.confirmPasswordError,
@@ -137,6 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 }),
                 Observer(builder: (_) {
                   return CheckboxListTile(
+                    enabled: !registerStore.isLoading,
                     activeColor: Theme.of(context).colorScheme.primary,
                     contentPadding: const EdgeInsets.all(0),
                     dense: true,
@@ -182,9 +195,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 48),
             Observer(builder: (_) {
               return ElevatedButton(
-                onPressed: () {},
-                child: const Text("Criar conta"),
+                onPressed: registerStore.isLoading ? null : registerStore.loginPressed,
+                child: registerStore.isLoading ? const CircularProgressIndicator() : const Text("Criar conta"),
               );
+            }),
+            Observer(builder: (_) {
+              if (registerStore.errorMessage != null) {
+                WidgetsBinding.instance.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                    backgroundColor: Theme.of(context).errorColor,
+                    content: Text(registerStore.errorMessage!),
+                    action: SnackBarAction(
+                      label: 'Fechar',
+                      textColor: Colors.white,
+                      onPressed: () {
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      },
+                    ),
+                  ));
+                });
+              }
+              return Container();
             }),
           ],
         ),

@@ -14,3 +14,7 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
+
+
+Auth Firebase: https://firebase.flutter.dev/docs/auth/usage/
+Theme Builder Material: https://m3.material.io/theme-builder#/custom
