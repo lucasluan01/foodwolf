@@ -1,8 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
+import 'package:foodwolf/screens/home_screen.dart';
 import 'package:foodwolf/screens/redefine_password_screen.dart';
 import 'package:foodwolf/screens/register_screen.dart';
 import 'package:foodwolf/stores/login_store.dart';
@@ -91,7 +93,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 48),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: () {
+                _loginStore.loginPressed().then((_) => {
+                      if (FirebaseAuth.instance.currentUser != null)
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()))
+                    });
+              },
               child: const Text("Entrar"),
             ),
             const SizedBox(height: 24),
@@ -159,6 +166,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   ],
                 ),
               ),
+            ),
+            Observer(
+              builder: (_) {
+                if (_loginStore.errorMessage != null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Theme.of(context).errorColor,
+                      content: Text(_loginStore.errorMessage!),
+                      action: SnackBarAction(
+                        label: 'Fechar',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        },
+                      ),
+                    ));
+                  });
+                }
+                return Container();
+              },
             ),
           ],
         ),

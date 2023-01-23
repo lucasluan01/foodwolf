@@ -9,6 +9,27 @@ part of 'login_store.dart';
 // ignore_for_file: non_constant_identifier_names, unnecessary_brace_in_string_interps, unnecessary_lambdas, prefer_expression_function_bodies, lines_longer_than_80_chars, avoid_as, avoid_annotating_with_dynamic, no_leading_underscores_for_local_identifiers
 
 mixin _$LoginStore on _LoginStoreBase, Store {
+  Computed<bool>? _$emailValidComputed;
+
+  @override
+  bool get emailValid =>
+      (_$emailValidComputed ??= Computed<bool>(() => super.emailValid,
+              name: '_LoginStoreBase.emailValid'))
+          .value;
+  Computed<bool>? _$passwordValidComputed;
+
+  @override
+  bool get passwordValid =>
+      (_$passwordValidComputed ??= Computed<bool>(() => super.passwordValid,
+              name: '_LoginStoreBase.passwordValid'))
+          .value;
+  Computed<bool>? _$formValidComputed;
+
+  @override
+  bool get formValid =>
+      (_$formValidComputed ??= Computed<bool>(() => super.formValid,
+              name: '_LoginStoreBase.formValid'))
+          .value;
   Computed<String?>? _$emailErrorComputed;
 
   @override
@@ -28,13 +49,13 @@ mixin _$LoginStore on _LoginStoreBase, Store {
       Atom(name: '_LoginStoreBase.email', context: context);
 
   @override
-  String? get email {
+  String get email {
     _$emailAtom.reportRead();
     return super.email;
   }
 
   @override
-  set email(String? value) {
+  set email(String value) {
     _$emailAtom.reportWrite(value, super.email, () {
       super.email = value;
     });
@@ -44,13 +65,13 @@ mixin _$LoginStore on _LoginStoreBase, Store {
       Atom(name: '_LoginStoreBase.password', context: context);
 
   @override
-  String? get password {
+  String get password {
     _$passwordAtom.reportRead();
     return super.password;
   }
 
   @override
-  set password(String? value) {
+  set password(String value) {
     _$passwordAtom.reportWrite(value, super.password, () {
       super.password = value;
     });
@@ -70,6 +91,70 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     _$isShowPasswordAtom.reportWrite(value, super.isShowPassword, () {
       super.isShowPassword = value;
     });
+  }
+
+  late final _$showErrorsAtom =
+      Atom(name: '_LoginStoreBase.showErrors', context: context);
+
+  @override
+  bool get showErrors {
+    _$showErrorsAtom.reportRead();
+    return super.showErrors;
+  }
+
+  @override
+  set showErrors(bool value) {
+    _$showErrorsAtom.reportWrite(value, super.showErrors, () {
+      super.showErrors = value;
+    });
+  }
+
+  late final _$isLoadingAtom =
+      Atom(name: '_LoginStoreBase.isLoading', context: context);
+
+  @override
+  bool get isLoading {
+    _$isLoadingAtom.reportRead();
+    return super.isLoading;
+  }
+
+  @override
+  set isLoading(bool value) {
+    _$isLoadingAtom.reportWrite(value, super.isLoading, () {
+      super.isLoading = value;
+    });
+  }
+
+  late final _$errorMessageAtom =
+      Atom(name: '_LoginStoreBase.errorMessage', context: context);
+
+  @override
+  String? get errorMessage {
+    _$errorMessageAtom.reportRead();
+    return super.errorMessage;
+  }
+
+  @override
+  set errorMessage(String? value) {
+    _$errorMessageAtom.reportWrite(value, super.errorMessage, () {
+      super.errorMessage = value;
+    });
+  }
+
+  late final _$loginPressedAsyncAction =
+      AsyncAction('_LoginStoreBase.loginPressed', context: context);
+
+  @override
+  Future<void> loginPressed() {
+    return _$loginPressedAsyncAction.run(() => super.loginPressed());
+  }
+
+  late final _$_loginAsyncAction =
+      AsyncAction('_LoginStoreBase._login', context: context);
+
+  @override
+  Future<void> _login() {
+    return _$_loginAsyncAction.run(() => super._login());
   }
 
   late final _$_LoginStoreBaseActionController =
@@ -114,6 +199,12 @@ mixin _$LoginStore on _LoginStoreBase, Store {
 email: ${email},
 password: ${password},
 isShowPassword: ${isShowPassword},
+showErrors: ${showErrors},
+isLoading: ${isLoading},
+errorMessage: ${errorMessage},
+emailValid: ${emailValid},
+passwordValid: ${passwordValid},
+formValid: ${formValid},
 emailError: ${emailError},
 passwordError: ${passwordError}
     ''';

@@ -195,7 +195,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 48),
             Observer(builder: (_) {
               return ElevatedButton(
-                onPressed: registerStore.isLoading ? null : registerStore.loginPressed,
+                onPressed: registerStore.isLoading ? null : registerStore.registerPressed,
                 child: registerStore.isLoading ? const CircularProgressIndicator() : const Text("Criar conta"),
               );
             }),

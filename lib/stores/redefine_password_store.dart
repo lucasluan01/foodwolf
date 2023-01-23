@@ -3,6 +3,7 @@ import 'package:mobx/mobx.dart';
 
 part 'redefine_password_store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class RedefinePasswordStore = _RedefinePasswordStoreBase with _$RedefinePasswordStore;
 
 abstract class _RedefinePasswordStoreBase with Store {

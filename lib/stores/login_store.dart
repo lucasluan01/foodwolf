@@ -1,3 +1,4 @@
+import 'package:foodwolf/auth/auth_service.dart';
 import 'package:foodwolf/utils/extensions.dart';
 import 'package:mobx/mobx.dart';
 
@@ -8,13 +9,22 @@ class LoginStore = _LoginStoreBase with _$LoginStore;
 
 abstract class _LoginStoreBase with Store {
   @observable
-  String? email;
+  String email = "";
 
   @observable
-  String? password;
+  String password = "";
 
   @observable
   bool isShowPassword = false;
+
+  @observable
+  bool showErrors = false;
+
+  @observable
+  bool isLoading = false;
+
+  @observable
+  String? errorMessage;
 
   @action
   void setEmail(String value) => email = value.trim();
@@ -26,16 +36,25 @@ abstract class _LoginStoreBase with Store {
   void setShowPassword() => isShowPassword = !isShowPassword;
 
   @computed
+  bool get emailValid => email.isEmailValid();
+
+  @computed
+  bool get passwordValid => password.isNotEmpty;
+
+  @computed
+  bool get formValid => emailValid && passwordValid;
+
+  @computed
   String? get emailError {
-    if (email == null) {
+    if (!showErrors || emailValid) {
       return null;
     }
 
-    if (email!.isEmpty) {
+    if (email.isEmpty) {
       return "Campo obrigatório";
     }
 
-    if (!email!.isEmailValid()) {
+    if (!email.isEmailValid()) {
       return "E-mail inválido";
     }
     return null;
@@ -43,13 +62,33 @@ abstract class _LoginStoreBase with Store {
 
   @computed
   String? get passwordError {
-    if (password == null) {
+    if (!showErrors || passwordValid) {
       return null;
     }
 
-    if (password!.isEmpty) {
+    if (password.isEmpty) {
       return "Campo obrigatório";
     }
     return null;
+  }
+
+  @action
+  Future<void> loginPressed() async {
+    if (formValid) {
+      await _login();
+      return;
+    }
+    showErrors = true;
+  }
+
+  @action
+  Future<void> _login() async {
+    isLoading = true;
+    try {
+      await AuthService.login(email: email, password: password);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    isLoading = false;
   }
 }

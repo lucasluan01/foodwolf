@@ -7,6 +7,7 @@ import 'package:mobx/mobx.dart';
 
 part 'register_store.g.dart';
 
+// ignore: library_private_types_in_public_api
 class RegisterStore = _RegisterStoreBase with _$RegisterStore;
 
 abstract class _RegisterStoreBase with Store {
@@ -203,7 +204,7 @@ abstract class _RegisterStoreBase with Store {
   }
 
   @action
-  loginPressed() {
+  registerPressed() {
     checkTermsAndPolicyError();
 
     if (isFormValid) {

@@ -19,4 +19,20 @@ class AuthService {
     }
     return null;
   }
+
+  static Future<void> login({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      await FirebaseAuth.instance.signInWithEmailAndPassword(email: email, password: password);
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'wrong-password') {
+        return Future.error("E-mail e/ou senha inválidos");
+      }
+    } catch (e) {
+      // ignore: avoid_print
+      print(e);
+    }
+  }
 }
