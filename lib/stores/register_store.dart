@@ -194,7 +194,7 @@ abstract class _RegisterStoreBase with Store {
 
     try {
       UserCredential? userCredential =
-          await AuthService.createUserWithEmailAndPassword(email: email, password: password);
+          await AuthService().createUserWithEmailAndPassword(email: email, password: password);
       var newUser = UserModel(id: userCredential!.user!.uid, name: name, document: document, phone: phone);
       await UserRepository.addUser(user: newUser);
     } catch (e) {

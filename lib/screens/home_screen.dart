@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:foodwolf/auth/auth_service.dart';
 import 'package:foodwolf/screens/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -11,7 +11,7 @@ class HomeScreen extends StatelessWidget {
       body: SafeArea(
         child: ElevatedButton(
           onPressed: () async {
-            await FirebaseAuth.instance.signOut();
+            AuthService().signOut();
             Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
           },
           child: const Text("Desconectar-se"),

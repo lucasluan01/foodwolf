@@ -85,7 +85,18 @@ abstract class _LoginStoreBase with Store {
   Future<void> _login() async {
     isLoading = true;
     try {
-      await AuthService.login(email: email, password: password);
+      await AuthService().signInWithEmailAndPassword(email: email, password: password);
+    } catch (e) {
+      errorMessage = e.toString();
+    }
+    isLoading = false;
+  }
+
+  @action
+  Future<void> googlePressed() async {
+    isLoading = true;
+    try {
+      await AuthService().signInwithGoogle();
     } catch (e) {
       errorMessage = e.toString();
     }

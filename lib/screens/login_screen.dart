@@ -1,8 +1,8 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:foodwolf/auth/auth_service.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
 import 'package:foodwolf/screens/home_screen.dart';
 import 'package:foodwolf/screens/redefine_password_screen.dart';
@@ -18,6 +18,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final _loginStore = LoginStore();
+  AuthService auth = AuthService();
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: () {
                 _loginStore.loginPressed().then((_) => {
-                      if (FirebaseAuth.instance.currentUser != null)
+                      if (auth.getCurrentUser() != null)
                         Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()))
                     });
               },
@@ -125,7 +126,12 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             const SizedBox(height: 24),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: (() {
+                _loginStore.googlePressed().then((_) => {
+                      if (auth.getCurrentUser() != null)
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()))
+                    });
+              }),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
