@@ -43,8 +43,29 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
             }),
             const SizedBox(height: 48),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: redefineStore.sendEmailPressed,
               child: const Text("Enviar e-mail"),
+            ),
+            Observer(
+              builder: (_) {
+                if (redefineStore.errorMessage != null) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      backgroundColor: Theme.of(context).errorColor,
+                      content: Text(redefineStore.errorMessage!),
+                      action: SnackBarAction(
+                        label: 'Fechar',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                        },
+                      ),
+                    ));
+                  });
+                }
+                return Container();
+              },
             ),
           ],
         ),

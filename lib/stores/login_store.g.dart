@@ -157,6 +157,14 @@ mixin _$LoginStore on _LoginStoreBase, Store {
     return _$_loginAsyncAction.run(() => super._login());
   }
 
+  late final _$googlePressedAsyncAction =
+      AsyncAction('_LoginStoreBase.googlePressed', context: context);
+
+  @override
+  Future<void> googlePressed() {
+    return _$googlePressedAsyncAction.run(() => super.googlePressed());
+  }
+
   late final _$_LoginStoreBaseActionController =
       ActionController(name: '_LoginStoreBase', context: context);
 
