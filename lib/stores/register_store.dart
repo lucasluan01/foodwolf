@@ -193,10 +193,11 @@ abstract class _RegisterStoreBase with Store {
     isLoading = true;
 
     try {
-      UserCredential? userCredential =
-          await AuthService().createUserWithEmailAndPassword(email: email, password: password);
-      var newUser = UserModel(id: userCredential!.user!.uid, name: name, document: document, phone: phone);
+      await AuthService().createUserWithEmailAndPassword(email: email, password: password);
+      User user = AuthService().getCurrentUser()!;
+      var newUser = UserModel(id: user.uid, name: name, document: document, phone: phone);
       await UserRepository.addUser(user: newUser);
+      await AuthService().sendEmailVerification();
     } catch (e) {
       errorMessage = e.toString();
     }
@@ -204,7 +205,7 @@ abstract class _RegisterStoreBase with Store {
   }
 
   @action
-  registerPressed() {
+  Future<void> registerPressed() async {
     checkTermsAndPolicyError();
 
     if (isFormValid) {

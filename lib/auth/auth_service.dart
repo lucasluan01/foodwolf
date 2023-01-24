@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -8,7 +6,7 @@ class AuthService {
   factory AuthService() => _instance;
   AuthService.internal();
 
-  User? _currtentUser;
+  User? _currentUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -17,7 +15,8 @@ class AuthService {
     required String password,
   }) async {
     try {
-      await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      final UserCredential authResult = await _auth.createUserWithEmailAndPassword(email: email, password: password);
+      _currentUser = authResult.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         return Future.error("E-mail inválido");
@@ -37,7 +36,7 @@ class AuthService {
   }) async {
     try {
       final UserCredential authResult = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      _currtentUser = authResult.user;
+      _currentUser = authResult.user;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {
         return Future.error("E-mail e/ou senha inválidos");
@@ -61,7 +60,7 @@ class AuthService {
         );
 
         final UserCredential authResult = await _auth.signInWithCredential(credential);
-        _currtentUser = authResult.user;
+        _currentUser = authResult.user;
       }
     } on FirebaseAuthException catch (e) {
       return Future.error(e);
@@ -73,9 +72,9 @@ class AuthService {
 
   Future<void> signOut() async {
     try {
+      _currentUser = null;
       await _googleSignIn.signOut();
       await _auth.signOut();
-      _currtentUser = null;
     } catch (e) {
       rethrow;
     }
@@ -94,8 +93,15 @@ class AuthService {
     }
   }
 
-  getCurrentUser() {
-    inspect(_currtentUser);
-    return _currtentUser;
+  Future<void> sendEmailVerification() async {
+    try {
+      await _currentUser!.sendEmailVerification();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  User? getCurrentUser() {
+    return _currentUser;
   }
 }

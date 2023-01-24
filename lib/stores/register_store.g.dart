@@ -285,6 +285,14 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
     return _$_createUserAsyncAction.run(() => super._createUser());
   }
 
+  late final _$registerPressedAsyncAction =
+      AsyncAction('_RegisterStoreBase.registerPressed', context: context);
+
+  @override
+  Future<void> registerPressed() {
+    return _$registerPressedAsyncAction.run(() => super.registerPressed());
+  }
+
   late final _$_RegisterStoreBaseActionController =
       ActionController(name: '_RegisterStoreBase', context: context);
 
@@ -382,17 +390,6 @@ mixin _$RegisterStore on _RegisterStoreBase, Store {
         name: '_RegisterStoreBase.checkTermsAndPolicyError');
     try {
       return super.checkTermsAndPolicyError();
-    } finally {
-      _$_RegisterStoreBaseActionController.endAction(_$actionInfo);
-    }
-  }
-
-  @override
-  dynamic registerPressed() {
-    final _$actionInfo = _$_RegisterStoreBaseActionController.startAction(
-        name: '_RegisterStoreBase.registerPressed');
-    try {
-      return super.registerPressed();
     } finally {
       _$_RegisterStoreBaseActionController.endAction(_$actionInfo);
     }

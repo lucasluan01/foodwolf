@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
+import 'package:foodwolf/screens/unverified_email_screen.dart';
 
 import '../stores/register_store.dart';
 
@@ -195,7 +196,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 48),
             Observer(builder: (_) {
               return ElevatedButton(
-                onPressed: registerStore.isLoading ? null : registerStore.registerPressed,
+                onPressed: registerStore.isLoading
+                    ? null
+                    : () {
+                        registerStore.registerPressed();
+                        if (registerStore.isFormValid) {
+                          Navigator.push(
+                              context, MaterialPageRoute(builder: (context) => const UnverifiedEmailScreen()));
+                        }
+                      },
                 child: registerStore.isLoading ? const CircularProgressIndicator() : const Text("Criar conta"),
               );
             }),

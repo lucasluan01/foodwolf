@@ -7,6 +7,7 @@ import 'package:foodwolf/config/theme/app_colors.dart';
 import 'package:foodwolf/screens/home_screen.dart';
 import 'package:foodwolf/screens/redefine_password_screen.dart';
 import 'package:foodwolf/screens/register_screen.dart';
+import 'package:foodwolf/screens/unverified_email_screen.dart';
 import 'package:foodwolf/stores/login_store.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -95,10 +96,15 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 48),
             ElevatedButton(
               onPressed: () {
-                _loginStore.loginPressed().then((_) => {
-                      if (auth.getCurrentUser() != null)
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()))
-                    });
+                _loginStore.loginPressed().then((_) {
+                  if (auth.getCurrentUser() != null && _loginStore.formValid) {
+                    if (AuthService().getCurrentUser()?.emailVerified ?? false) {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+                    } else {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => const UnverifiedEmailScreen()));
+                    }
+                  }
+                });
               },
               child: const Text("Entrar"),
             ),
@@ -119,7 +125,6 @@ class _LoginScreenState extends State<LoginScreen> {
                 Expanded(
                   child: Divider(
                     color: AppColors.neutral_1,
-                    thickness: 0.75,
                   ),
                 ),
               ],
