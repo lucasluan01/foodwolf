@@ -6,7 +6,6 @@ class AuthService {
   factory AuthService() => _instance;
   AuthService.internal();
 
-  User? _currentUser;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
 
@@ -15,8 +14,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final UserCredential authResult = await _auth.createUserWithEmailAndPassword(email: email, password: password);
-      _currentUser = authResult.user;
+      await _auth.createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'invalid-email') {
         return Future.error("E-mail inválido");
@@ -35,8 +33,7 @@ class AuthService {
     required String password,
   }) async {
     try {
-      final UserCredential authResult = await _auth.signInWithEmailAndPassword(email: email, password: password);
-      _currentUser = authResult.user;
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'wrong-password') {
         return Future.error("E-mail e/ou senha inválidos");
@@ -59,8 +56,7 @@ class AuthService {
           accessToken: googleAuth.accessToken,
         );
 
-        final UserCredential authResult = await _auth.signInWithCredential(credential);
-        _currentUser = authResult.user;
+        await _auth.signInWithCredential(credential);
       }
     } on FirebaseAuthException catch (e) {
       return Future.error(e);
@@ -72,7 +68,6 @@ class AuthService {
 
   Future<void> signOut() async {
     try {
-      _currentUser = null;
       await _googleSignIn.signOut();
       await _auth.signOut();
     } catch (e) {
@@ -87,6 +82,8 @@ class AuthService {
       if (e.code == 'user-not-found') {
         return Future.error("Nenhum usuário encontrado");
       }
+      // ignore: avoid_print
+      print(e);
     } catch (e) {
       // ignore: avoid_print
       print(e);
@@ -95,13 +92,18 @@ class AuthService {
 
   Future<void> sendEmailVerification() async {
     try {
-      await _currentUser!.sendEmailVerification();
+      await _auth.currentUser!.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'too-many-requests') {
+        return Future.error("Não foi possível atender a solicitação no momento. Tente novamente mais tarde.");
+      }
     } catch (e) {
+      // ignore: avoid_print
       print(e);
     }
   }
 
   User? getCurrentUser() {
-    return _currentUser;
+    return _auth.currentUser;
   }
 }

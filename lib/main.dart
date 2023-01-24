@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
 import 'package:foodwolf/config/theme/color_schemes.g.dart';
-import 'package:foodwolf/screens/login_screen.dart';
+import 'package:foodwolf/screens/splash_screen.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
@@ -67,7 +67,7 @@ class MyApp extends StatelessWidget {
           height: 50,
         ),
       ),
-      home: const LoginScreen(),
+      home: const SplashScreen(),
     );
   }
 }

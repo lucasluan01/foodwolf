@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:foodwolf/auth/auth_service.dart';
 import 'package:foodwolf/utils/extensions.dart';
 import 'package:mobx/mobx.dart';
@@ -15,7 +17,13 @@ abstract class _RedefinePasswordStoreBase with Store {
   bool showErrors = false;
 
   @observable
-  String? errorMessage;
+  int timeLeft = 30;
+
+  @observable
+  String? message;
+
+  @observable
+  bool error = false;
 
   @computed
   bool get emailValid => email.isNotEmpty && email.isEmailValid();
@@ -43,12 +51,30 @@ abstract class _RedefinePasswordStoreBase with Store {
   Future<void> sendEmailPressed() async {
     if (emailValid) {
       try {
+        timer();
         await AuthService().sendPasswordResetEmail(email: email);
+        message = "E-mail enviado";
       } catch (e) {
-        errorMessage = e.toString();
+        message = e.toString();
+        error = true;
       }
       return;
     }
     showErrors = true;
+  }
+
+  @action
+  void timer() {
+    timeLeft = 30;
+    Timer.periodic(
+      const Duration(seconds: 1),
+      (timer) {
+        if (timeLeft > 0) {
+          timeLeft--;
+        } else {
+          timer.cancel();
+        }
+      },
+    );
   }
 }

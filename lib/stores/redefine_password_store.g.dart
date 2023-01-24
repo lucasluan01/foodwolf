@@ -56,19 +56,51 @@ mixin _$RedefinePasswordStore on _RedefinePasswordStoreBase, Store {
     });
   }
 
-  late final _$errorMessageAtom =
-      Atom(name: '_RedefinePasswordStoreBase.errorMessage', context: context);
+  late final _$timeLeftAtom =
+      Atom(name: '_RedefinePasswordStoreBase.timeLeft', context: context);
 
   @override
-  String? get errorMessage {
-    _$errorMessageAtom.reportRead();
-    return super.errorMessage;
+  int get timeLeft {
+    _$timeLeftAtom.reportRead();
+    return super.timeLeft;
   }
 
   @override
-  set errorMessage(String? value) {
-    _$errorMessageAtom.reportWrite(value, super.errorMessage, () {
-      super.errorMessage = value;
+  set timeLeft(int value) {
+    _$timeLeftAtom.reportWrite(value, super.timeLeft, () {
+      super.timeLeft = value;
+    });
+  }
+
+  late final _$messageAtom =
+      Atom(name: '_RedefinePasswordStoreBase.message', context: context);
+
+  @override
+  String? get message {
+    _$messageAtom.reportRead();
+    return super.message;
+  }
+
+  @override
+  set message(String? value) {
+    _$messageAtom.reportWrite(value, super.message, () {
+      super.message = value;
+    });
+  }
+
+  late final _$errorAtom =
+      Atom(name: '_RedefinePasswordStoreBase.error', context: context);
+
+  @override
+  bool get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(bool value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
     });
   }
 
@@ -96,11 +128,24 @@ mixin _$RedefinePasswordStore on _RedefinePasswordStoreBase, Store {
   }
 
   @override
+  void timer() {
+    final _$actionInfo = _$_RedefinePasswordStoreBaseActionController
+        .startAction(name: '_RedefinePasswordStoreBase.timer');
+    try {
+      return super.timer();
+    } finally {
+      _$_RedefinePasswordStoreBaseActionController.endAction(_$actionInfo);
+    }
+  }
+
+  @override
   String toString() {
     return '''
 email: ${email},
 showErrors: ${showErrors},
-errorMessage: ${errorMessage},
+timeLeft: ${timeLeft},
+message: ${message},
+error: ${error},
 emailValid: ${emailValid},
 emailError: ${emailError}
     ''';

@@ -41,17 +41,24 @@ class _UnverifiedEmailScreenState extends State<UnverifiedEmailScreen> {
                 textAlign: TextAlign.justify,
               ),
               const Spacer(),
-              ElevatedButton(
-                onPressed: unverifiedEmailStore.pressedResendEmail,
-                child: const Text("Reenviar e-mail"),
-              ),
+              Observer(builder: (_) {
+                return Visibility(
+                  visible: !unverifiedEmailStore.wasResent,
+                  child: ElevatedButton(
+                    onPressed: unverifiedEmailStore.pressedResendEmail,
+                    child: const Text("Reenviar e-mail"),
+                  ),
+                );
+              }),
               const SizedBox(height: 16),
-              OutlinedButton(
-                onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-                },
-                child: const Text("Voltar"),
-              ),
+              Observer(builder: (_) {
+                return OutlinedButton(
+                  onPressed: () {
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+                  },
+                  child: const Text("Voltar"),
+                );
+              }),
               Observer(
                 builder: (_) {
                   if (unverifiedEmailStore.message != null) {

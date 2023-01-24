@@ -25,6 +25,38 @@ mixin _$UnverifiedEmailStore on _UnverifiedEmailStoreBase, Store {
     });
   }
 
+  late final _$errorAtom =
+      Atom(name: '_UnverifiedEmailStoreBase.error', context: context);
+
+  @override
+  bool get error {
+    _$errorAtom.reportRead();
+    return super.error;
+  }
+
+  @override
+  set error(bool value) {
+    _$errorAtom.reportWrite(value, super.error, () {
+      super.error = value;
+    });
+  }
+
+  late final _$wasResentAtom =
+      Atom(name: '_UnverifiedEmailStoreBase.wasResent', context: context);
+
+  @override
+  bool get wasResent {
+    _$wasResentAtom.reportRead();
+    return super.wasResent;
+  }
+
+  @override
+  set wasResent(bool value) {
+    _$wasResentAtom.reportWrite(value, super.wasResent, () {
+      super.wasResent = value;
+    });
+  }
+
   late final _$pressedResendEmailAsyncAction = AsyncAction(
       '_UnverifiedEmailStoreBase.pressedResendEmail',
       context: context);
@@ -38,7 +70,9 @@ mixin _$UnverifiedEmailStore on _UnverifiedEmailStoreBase, Store {
   @override
   String toString() {
     return '''
-message: ${message}
+message: ${message},
+error: ${error},
+wasResent: ${wasResent}
     ''';
   }
 }

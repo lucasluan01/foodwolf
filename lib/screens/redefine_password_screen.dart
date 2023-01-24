@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:foodwolf/config/theme/app_colors.dart';
 import 'package:foodwolf/stores/redefine_password_store.dart';
 
 class RedefinePasswordScreen extends StatefulWidget {
@@ -42,18 +43,43 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
               );
             }),
             const SizedBox(height: 48),
-            ElevatedButton(
-              onPressed: redefineStore.sendEmailPressed,
-              child: const Text("Enviar e-mail"),
-            ),
+            Observer(builder: (_) {
+              return ElevatedButton(
+                onPressed:
+                    redefineStore.timeLeft != 30 && redefineStore.timeLeft != 0 ? null : redefineStore.sendEmailPressed,
+                child: const Text("Enviar e-mail"),
+              );
+            }),
+            const SizedBox(height: 16),
+            Observer(builder: (_) {
+              if (redefineStore.timeLeft == 30 || redefineStore.timeLeft == 0) {
+                return Container();
+              }
+              return Center(
+                child: Text.rich(
+                  TextSpan(
+                    text: "Reenviar em ",
+                    children: <InlineSpan>[
+                      TextSpan(
+                        text: "00:${redefineStore.timeLeft.toString().padLeft(2, '0')}",
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }),
             Observer(
               builder: (_) {
-                if (redefineStore.errorMessage != null) {
+                if (redefineStore.message != null) {
                   WidgetsBinding.instance.addPostFrameCallback((_) {
                     ScaffoldMessenger.of(context).removeCurrentSnackBar();
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: Theme.of(context).errorColor,
-                      content: Text(redefineStore.errorMessage!),
+                      backgroundColor: redefineStore.error ? Theme.of(context).errorColor : AppColors.success,
+                      content: Text(redefineStore.message!),
                       action: SnackBarAction(
                         label: 'Fechar',
                         textColor: Colors.white,
