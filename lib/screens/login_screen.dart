@@ -97,8 +97,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ElevatedButton(
               onPressed: () {
                 _loginStore.loginPressed().then((_) {
-                  if (auth.getCurrentUser() != null && _loginStore.formValid) {
-                    if (AuthService().getCurrentUser()?.emailVerified ?? false) {
+                  if (auth.getCurrentUser() != null && _loginStore.formValid && _loginStore.errorMessage == null) {
+                    if (auth.getIsEmailVerified()) {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
                     } else {
                       Navigator.push(context, MaterialPageRoute(builder: (context) => const UnverifiedEmailScreen()));

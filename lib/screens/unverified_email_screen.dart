@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
 import 'package:foodwolf/screens/login_screen.dart';
 import 'package:foodwolf/stores/unverified_email_store.dart';
@@ -24,10 +23,10 @@ class _UnverifiedEmailScreenState extends State<UnverifiedEmailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SvgPicture.asset(
-                "assets/icons/email_sent.svg",
-                width: 100,
-                color: AppColors.success,
+              const Spacer(),
+              Image.asset(
+                "assets/icons/send_message.png",
+                height: 100,
               ),
               const SizedBox(height: 24),
               Text(

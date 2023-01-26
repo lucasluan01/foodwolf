@@ -86,6 +86,7 @@ abstract class _LoginStoreBase with Store {
     isLoading = true;
     try {
       await AuthService().signInWithEmailAndPassword(email: email, password: password);
+      errorMessage = null;
     } catch (e) {
       errorMessage = e.toString();
     }

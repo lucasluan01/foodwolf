@@ -22,7 +22,9 @@ class _SplashScreenState extends State<SplashScreen> {
 
     Timer(const Duration(seconds: 3), () {
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (_) => authService.getCurrentUser() == null ? const LoginScreen() : const HomeScreen()));
+          builder: (_) => authService.getCurrentUser() == null || !authService.getIsEmailVerified()
+              ? const LoginScreen()
+              : const HomeScreen()));
     });
   }
 

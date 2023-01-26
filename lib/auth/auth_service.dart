@@ -106,4 +106,8 @@ class AuthService {
   User? getCurrentUser() {
     return _auth.currentUser;
   }
+
+  bool getIsEmailVerified() {
+    return _auth.currentUser?.emailVerified ?? false;
+  }
 }
