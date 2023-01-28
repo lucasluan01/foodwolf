@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
-import 'package:foodwolf/screens/login_screen.dart';
-import 'package:foodwolf/stores/unverified_email_store.dart';
+import 'package:foodwolf/stores/auth_store.dart';
+
+import '../components/snackbar_custom.dart';
+import '../enum/notification_enum.dart';
 
 class UnverifiedEmailScreen extends StatefulWidget {
   const UnverifiedEmailScreen({super.key});
@@ -12,7 +14,13 @@ class UnverifiedEmailScreen extends StatefulWidget {
 }
 
 class _UnverifiedEmailScreenState extends State<UnverifiedEmailScreen> {
-  var unverifiedEmailStore = UnverifiedEmailStore();
+  var authStore = AuthStore();
+
+    @override
+  void dispose() {
+    super.dispose();
+    authStore.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +50,9 @@ class _UnverifiedEmailScreenState extends State<UnverifiedEmailScreen> {
               const Spacer(),
               Observer(builder: (_) {
                 return Visibility(
-                  visible: !unverifiedEmailStore.wasResent,
+                  visible: !authStore.wasResent,
                   child: ElevatedButton(
-                    onPressed: unverifiedEmailStore.pressedResendEmail,
+                    onPressed: authStore.pressedResendEmail,
                     child: const Text("Reenviar e-mail"),
                   ),
                 );
@@ -52,29 +60,14 @@ class _UnverifiedEmailScreenState extends State<UnverifiedEmailScreen> {
               const SizedBox(height: 16),
               Observer(builder: (_) {
                 return OutlinedButton(
-                  onPressed: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-                  },
+                  onPressed: () => Navigator.pushNamed(context, '/login'),
                   child: const Text("Voltar"),
                 );
               }),
               Observer(
                 builder: (_) {
-                  if (unverifiedEmailStore.message != null) {
-                    WidgetsBinding.instance.addPostFrameCallback((_) {
-                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        backgroundColor: unverifiedEmailStore.error ? Theme.of(context).errorColor : AppColors.success,
-                        content: Text(unverifiedEmailStore.message!),
-                        action: SnackBarAction(
-                          label: 'Fechar',
-                          textColor: Colors.white,
-                          onPressed: () {
-                            ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                          },
-                        ),
-                      ));
-                    });
+                  if (authStore.message != null) {
+                    SnackBarCustom().showSnackbar(context: context, message: authStore.message!, typeNotification: authStore.isError ? InformationEnum.error : InformationEnum.success);
                   }
                   return Container();
                 },

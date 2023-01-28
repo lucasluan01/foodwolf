@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
-import 'package:foodwolf/config/theme/app_colors.dart';
-import 'package:foodwolf/stores/redefine_password_store.dart';
+import 'package:foodwolf/components/snackbar_custom.dart';
+import 'package:foodwolf/enum/notification_enum.dart';
+import 'package:foodwolf/stores/auth_store.dart';
 
 class RedefinePasswordScreen extends StatefulWidget {
   const RedefinePasswordScreen({super.key});
@@ -11,7 +12,13 @@ class RedefinePasswordScreen extends StatefulWidget {
 }
 
 class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
-  final redefineStore = RedefinePasswordStore();
+  final authStore = AuthStore();
+
+  @override
+  void dispose() {
+    super.dispose();
+    authStore.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,28 +38,29 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
                 decoration: InputDecoration(
                   labelText: "E-mail",
                   border: const OutlineInputBorder(),
-                  errorText: redefineStore.emailError,
-                  suffixIcon: redefineStore.emailError != null
+                  errorText: authStore.emailError,
+                  suffixIcon: authStore.emailError != null
                       ? Icon(
                           Icons.error,
-                          color: Theme.of(context).errorColor,
+                          color: Theme.of(context).colorScheme.error,
                         )
                       : null,
                 ),
-                onChanged: redefineStore.setEmail,
+                onChanged: authStore.setEmail,
               );
             }),
             const SizedBox(height: 48),
             Observer(builder: (_) {
               return ElevatedButton(
-                onPressed:
-                    redefineStore.timeLeft != 30 && redefineStore.timeLeft != 0 ? null : redefineStore.sendEmailPressed,
+                onPressed: authStore.timeLeft != 30 && authStore.timeLeft != 0
+                    ? null
+                    : authStore.sendEmailPressed,
                 child: const Text("Enviar e-mail"),
               );
             }),
             const SizedBox(height: 16),
             Observer(builder: (_) {
-              if (redefineStore.timeLeft == 30 || redefineStore.timeLeft == 0) {
+              if (authStore.timeLeft == 30 || authStore.timeLeft == 0) {
                 return Container();
               }
               return Center(
@@ -61,7 +69,8 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
                     text: "Reenviar em ",
                     children: <InlineSpan>[
                       TextSpan(
-                        text: "00:${redefineStore.timeLeft.toString().padLeft(2, '0')}",
+                        text:
+                            "00:${authStore.timeLeft.toString().padLeft(2, '0')}",
                         style: TextStyle(
                           color: Theme.of(context).colorScheme.primary,
                           fontWeight: FontWeight.bold,
@@ -74,21 +83,8 @@ class _RedefinePasswordScreenState extends State<RedefinePasswordScreen> {
             }),
             Observer(
               builder: (_) {
-                if (redefineStore.message != null) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: redefineStore.error ? Theme.of(context).errorColor : AppColors.success,
-                      content: Text(redefineStore.message!),
-                      action: SnackBarAction(
-                        label: 'Fechar',
-                        textColor: Colors.white,
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        },
-                      ),
-                    ));
-                  });
+                if (authStore.message != null) {
+                  SnackBarCustom().showSnackbar(context: context, message: authStore.message!, typeNotification: authStore.isError ? InformationEnum.error : InformationEnum.success);
                 }
                 return Container();
               },

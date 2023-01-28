@@ -2,9 +2,9 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
-import 'package:foodwolf/screens/unverified_email_screen.dart';
-
-import '../stores/register_store.dart';
+import 'package:foodwolf/stores/auth_store.dart';
+import 'package:foodwolf/enum/notification_enum.dart';
+import '../components/snackbar_custom.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,7 +14,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final registerStore = RegisterStore();
+  final authStore = AuthStore();
+
+  @override
+  void dispose() {
+    super.dispose();
+    authStore.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,128 +35,130 @@ class _RegisterScreenState extends State<RegisterScreen> {
               children: [
                 Observer(builder: (_) {
                   return TextFormField(
-                    enabled: !registerStore.isLoading,
+                    enabled: !authStore.isLoading,
                     decoration: InputDecoration(
-                      filled: registerStore.isLoading,
+                      filled: authStore.isLoading,
                       labelText: "Nome",
                       border: const OutlineInputBorder(),
-                      errorText: registerStore.nameError,
-                      suffixIcon: registerStore.nameError != null
+                      errorText: authStore.nameError,
+                      suffixIcon: authStore.nameError != null
                           ? Icon(
                               Icons.error,
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )
                           : null,
                     ),
-                    onChanged: registerStore.setName,
+                    onChanged: authStore.setName,
                   );
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
-                    enabled: !registerStore.isLoading,
+                    enabled: !authStore.isLoading,
                     decoration: InputDecoration(
-                      filled: registerStore.isLoading,
+                      filled: authStore.isLoading,
                       border: const OutlineInputBorder(),
                       labelText: "CPF (opcional)",
                       hintText: "000.000.000-00",
-                      errorText: registerStore.documentError,
-                      suffixIcon: registerStore.documentError != null
+                      errorText: authStore.documentError,
+                      suffixIcon: authStore.documentError != null
                           ? Icon(
                               Icons.error,
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )
                           : null,
                     ),
-                    onChanged: registerStore.setDocument,
+                    onChanged: authStore.setDocument,
                     keyboardType: TextInputType.number,
                   );
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
-                    enabled: !registerStore.isLoading,
+                    enabled: !authStore.isLoading,
                     decoration: InputDecoration(
-                      filled: registerStore.isLoading,
+                      filled: authStore.isLoading,
                       labelText: "Celular",
                       hintText: "(31) 9 0000-0000",
                       border: const OutlineInputBorder(),
-                      errorText: registerStore.phoneError,
-                      suffixIcon: registerStore.phoneError != null
+                      errorText: authStore.phoneError,
+                      suffixIcon: authStore.phoneError != null
                           ? Icon(
                               Icons.error,
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )
                           : null,
                     ),
-                    onChanged: registerStore.setPhone,
+                    onChanged: authStore.setPhone,
                     keyboardType: TextInputType.number,
                   );
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
-                    enabled: !registerStore.isLoading,
+                    enabled: !authStore.isLoading,
                     decoration: InputDecoration(
-                      filled: registerStore.isLoading,
+                      filled: authStore.isLoading,
                       labelText: "E-mail",
                       hintText: "nome@exemplo.com",
                       border: const OutlineInputBorder(),
-                      errorText: registerStore.emailError,
-                      suffixIcon: registerStore.emailError != null
+                      errorText: authStore.emailError,
+                      suffixIcon: authStore.emailError != null
                           ? Icon(
                               Icons.error,
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )
                           : null,
                     ),
-                    onChanged: registerStore.setEmail,
+                    onChanged: authStore.setEmail,
                   );
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
-                    enabled: !registerStore.isLoading,
+                    enabled: !authStore.isLoading,
                     decoration: InputDecoration(
-                      filled: registerStore.isLoading,
+                      filled: authStore.isLoading,
                       labelText: "Senha",
                       border: const OutlineInputBorder(),
-                      errorText: registerStore.passwordError,
-                      suffixIcon: registerStore.passwordError != null
+                      errorText: authStore.passwordError,
+                      suffixIcon: authStore.passwordError != null
                           ? Icon(
                               Icons.error,
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )
                           : IconButton(
-                              onPressed: registerStore.setIsShowPassword,
+                              onPressed: authStore.setIsShowPassword,
                               icon: Icon(
-                                registerStore.isShowPassword ? Icons.visibility_off : Icons.visibility,
+                                authStore.isShowPassword
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
                                 color: AppColors.neutral_1,
                               ),
                             ),
                     ),
-                    onChanged: registerStore.setPassword,
-                    obscureText: !registerStore.isShowPassword,
+                    onChanged: authStore.setPassword,
+                    obscureText: !authStore.isShowPassword,
                   );
                 }),
                 Observer(builder: (_) {
                   return TextFormField(
-                    enabled: !registerStore.isLoading,
+                    enabled: !authStore.isLoading,
                     decoration: InputDecoration(
-                      filled: registerStore.isLoading,
+                      filled: authStore.isLoading,
                       labelText: "Confirmar senha",
                       border: const OutlineInputBorder(),
-                      errorText: registerStore.confirmPasswordError,
-                      suffixIcon: registerStore.confirmPasswordError != null
+                      errorText: authStore.confirmPasswordError,
+                      suffixIcon: authStore.confirmPasswordError != null
                           ? Icon(
                               Icons.error,
-                              color: Theme.of(context).errorColor,
+                              color: Theme.of(context).colorScheme.error,
                             )
                           : null,
                     ),
                     obscureText: true,
-                    onChanged: registerStore.setConfirmPassword,
+                    onChanged: authStore.setConfirmPassword,
                   );
                 }),
                 Observer(builder: (_) {
                   return CheckboxListTile(
-                    enabled: !registerStore.isLoading,
+                    enabled: !authStore.isLoading,
                     activeColor: Theme.of(context).colorScheme.primary,
                     contentPadding: const EdgeInsets.all(0),
                     dense: true,
@@ -186,8 +194,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ],
                       ),
                     ),
-                    value: registerStore.checkTermsAndPolicy,
-                    onChanged: registerStore.setCheckTermsAndPolicy,
+                    value: authStore.checkTermsAndPolicy,
+                    onChanged: authStore.setCheckTermsAndPolicy,
                     controlAffinity: ListTileControlAffinity.leading,
                   );
                 }),
@@ -196,34 +204,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
             const SizedBox(height: 48),
             Observer(builder: (_) {
               return ElevatedButton(
-                onPressed: registerStore.isLoading
+                onPressed: authStore.isLoading
                     ? null
                     : () {
-                        registerStore.registerPressed();
-                        if (registerStore.isFormValid) {
-                          Navigator.push(
-                              context, MaterialPageRoute(builder: (context) => const UnverifiedEmailScreen()));
-                        }
+                        authStore.registerPressed().then((_) => {
+                              if (authStore.formRegisterValid &&
+                                  authStore.message == null)
+                                {
+                                  Navigator.pushNamed(
+                                      context, '/unverified-email')
+                                }
+                            });
                       },
-                child: registerStore.isLoading ? const CircularProgressIndicator() : const Text("Criar conta"),
+                child: authStore.isLoading
+                    ? const CircularProgressIndicator()
+                    : const Text("Criar conta"),
               );
             }),
             Observer(builder: (_) {
-              if (registerStore.errorMessage != null) {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    backgroundColor: Theme.of(context).errorColor,
-                    content: Text(registerStore.errorMessage!),
-                    action: SnackBarAction(
-                      label: 'Fechar',
-                      textColor: Colors.white,
-                      onPressed: () {
-                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      },
-                    ),
-                  ));
-                });
+              if (authStore.message != null) {
+                SnackBarCustom().showSnackbar(
+                    context: context,
+                    message: authStore.message!,
+                    typeNotification: InformationEnum.error);
               }
               return Container();
             }),

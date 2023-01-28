@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "860670522361-d7j8i82aqhvscbfnvss1a4mj4qvpgaem.apps.googleusercontent.com",
+          "client_id": "860670522361-5mm68qdnll7tc6g0rvf7najccne2g6q4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.lucas.food_wolf",
+            "certificate_hash": "d793d926443e253429f7d1c4c5e35290f94beff5"
+          }
+        },
+        {
+          "client_id": "860670522361-skhkr0ctagjk10r1hfp1pdenm0tsav4j.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

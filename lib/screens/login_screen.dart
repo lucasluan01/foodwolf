@@ -3,12 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:foodwolf/auth/auth_service.dart';
+import 'package:foodwolf/components/snackbar_custom.dart';
 import 'package:foodwolf/config/theme/app_colors.dart';
-import 'package:foodwolf/screens/home_screen.dart';
-import 'package:foodwolf/screens/redefine_password_screen.dart';
-import 'package:foodwolf/screens/register_screen.dart';
-import 'package:foodwolf/screens/unverified_email_screen.dart';
-import 'package:foodwolf/stores/login_store.dart';
+import 'package:foodwolf/enum/notification_enum.dart';
+import 'package:foodwolf/stores/auth_store.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,8 +16,14 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _loginStore = LoginStore();
+  final _authStore = AuthStore();
   AuthService auth = AuthService();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _authStore.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,16 +41,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   labelText: "E-mail",
                   border: const OutlineInputBorder(),
-                  errorText: _loginStore.emailError,
-                  suffixIcon: _loginStore.emailError != null
+                  errorText: _authStore.emailError,
+                  suffixIcon: _authStore.emailError != null
                       ? Icon(
                           Icons.error,
-                          color: Theme.of(context).errorColor,
+                          color: Theme.of(context).colorScheme.error,
                         )
                       : null,
                 ),
                 keyboardType: TextInputType.emailAddress,
-                onChanged: _loginStore.setEmail,
+                onChanged: _authStore.setEmail,
               );
             }),
             const SizedBox(height: 16),
@@ -55,33 +59,30 @@ class _LoginScreenState extends State<LoginScreen> {
                 decoration: InputDecoration(
                   labelText: "Senha",
                   border: const OutlineInputBorder(),
-                  suffixIcon: _loginStore.passwordError != null
+                  suffixIcon: _authStore.passwordError != null
                       ? Icon(
                           Icons.error,
-                          color: Theme.of(context).errorColor,
+                          color: Theme.of(context).colorScheme.error,
                         )
                       : IconButton(
-                          onPressed: _loginStore.setShowPassword,
+                          onPressed: _authStore.setShowPassword,
                           icon: Icon(
-                            _loginStore.isShowPassword ? Icons.visibility_off : Icons.visibility,
+                            _authStore.isShowPassword
+                                ? Icons.visibility_off
+                                : Icons.visibility,
                             color: AppColors.neutral_1,
                           ),
                         ),
-                  errorText: _loginStore.passwordError,
+                  errorText: _authStore.passwordError,
                 ),
-                obscureText: !_loginStore.isShowPassword,
-                onChanged: _loginStore.setPassword,
+                obscureText: !_authStore.isShowPassword,
+                onChanged: _authStore.setPassword,
               );
             }),
             const SizedBox(height: 12),
             GestureDetector(
               onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const RedefinePasswordScreen(),
-                  ),
-                );
+                Navigator.pushNamed(context, '/redefine-password');
               },
               child: Text(
                 "Esqueci minha senha",
@@ -96,12 +97,14 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 48),
             ElevatedButton(
               onPressed: () {
-                _loginStore.loginPressed().then((_) {
-                  if (auth.getCurrentUser() != null && _loginStore.formValid && _loginStore.errorMessage == null) {
+                _authStore.loginPressed().then((_) {
+                  if (auth.getCurrentUser() != null &&
+                      _authStore.formLoginValid &&
+                      _authStore.message == null) {
                     if (auth.getIsEmailVerified()) {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+                      Navigator.pushNamed(context, '/home');
                     } else {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => const UnverifiedEmailScreen()));
+                      Navigator.pushNamed(context, '/unverified-email');
                     }
                   }
                 });
@@ -132,10 +135,10 @@ class _LoginScreenState extends State<LoginScreen> {
             const SizedBox(height: 24),
             OutlinedButton(
               onPressed: (() {
-                _loginStore.googlePressed().then((_) => {
-                      if (auth.getCurrentUser() != null)
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const HomeScreen()))
-                    });
+                _authStore.googlePressed().then((_) =>
+                    auth.getCurrentUser() != null
+                        ? Navigator.pushNamed(context, '/home')
+                        : '');
               }),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -165,14 +168,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                       recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => const RegisterScreen(),
-                            ),
-                          );
-                        },
+                        ..onTap =
+                            () => Navigator.pushNamed(context, '/register'),
                     ),
                   ],
                 ),
@@ -180,21 +177,8 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
             Observer(
               builder: (_) {
-                if (_loginStore.errorMessage != null) {
-                  WidgetsBinding.instance.addPostFrameCallback((_) {
-                    ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      backgroundColor: Theme.of(context).errorColor,
-                      content: Text(_loginStore.errorMessage!),
-                      action: SnackBarAction(
-                        label: 'Fechar',
-                        textColor: Colors.white,
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        },
-                      ),
-                    ));
-                  });
+                if (_authStore.message != null) {
+                  SnackBarCustom().showSnackbar(context: context, message: _authStore.message!, typeNotification: InformationEnum.error);
                 }
                 return Container();
               },

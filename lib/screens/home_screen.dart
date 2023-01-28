@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:foodwolf/auth/auth_service.dart';
-import 'package:foodwolf/screens/login_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -9,12 +8,22 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ElevatedButton(
-          onPressed: () async {
-            AuthService().signOut();
-            Navigator.push(context, MaterialPageRoute(builder: (context) => const LoginScreen()));
-          },
-          child: const Text("Desconectar-se"),
+        child: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                AuthService().signOut();
+                Navigator.pushNamed(context, '/login');
+              },
+              child: const Text("Desconectar-se"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/profile');
+              },
+              child: const Text("Ir para a tela de perfil"),
+            ),
+          ],
         ),
       ),
     );
